@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func TestInsertElem(t *testing.T) {
+func TestSqList(t *testing.T) {
 
 	// 初始化
 	sq := InitSqList()
