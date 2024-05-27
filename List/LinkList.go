@@ -1,6 +1,9 @@
 package List
 
-import "fmt"
+import (
+	"errors"
+	"fmt"
+)
 
 type LNode struct {
 	data ElemType
@@ -36,10 +39,10 @@ func (l *LinkList) Length() int64 {
 	return (*l).length
 }
 
-func (l *LinkList) Clear() bool {
+func (l *LinkList) Clear() error {
 
-	if (*l).IsEmpty() {
-		return false
+	if l == nil {
+		return errors.New("list is nil")
 	}
 
 	p := (*l).next
@@ -53,24 +56,25 @@ func (l *LinkList) Clear() bool {
 	(*l).next = nil
 	(*l).length = 0
 
-	return true
+	return nil
 }
 
-func (l *LinkList) Destory() bool {
+func (l *LinkList) Destory() error {
 
-	if (*l).Clear() {
+	err := (*l).Clear()
+	if err != nil {
 		l = nil
 	} else {
-		return false
+		return errors.New("Clear is failure")
 	}
 
-	return true
+	return nil
 }
 
-func (l *LinkList) Insert(i int64, e ElemType) bool {
+func (l *LinkList) Insert(i int64, e ElemType) error {
 
 	if i < 1 || i > l.length+1 {
-		return false
+		return errors.New("index out of range")
 	}
 
 	var j int64 = 1
@@ -93,12 +97,12 @@ func (l *LinkList) Insert(i int64, e ElemType) bool {
 		(*p).next = node
 	}
 	(*l).length += 1
-	return true
+	return nil
 }
 
-func (l *LinkList) Delete(i int64, e *ElemType) bool {
+func (l *LinkList) Delete(i int64, e *ElemType) error {
 	if i < 1 || i > l.length {
-		return false
+		return errors.New("index out of range")
 	}
 
 	if i == 1 {
@@ -117,11 +121,11 @@ func (l *LinkList) Delete(i int64, e *ElemType) bool {
 	}
 
 	(*l).length -= 1
-	return true
+	return nil
 
 }
 
-func (l *LinkList) GetElem(i int64, e *ElemType) bool {
+func (l *LinkList) GetElem(i int64, e *ElemType) error {
 	var j int64 = 1
 	p := (*l).next
 
@@ -131,11 +135,11 @@ func (l *LinkList) GetElem(i int64, e *ElemType) bool {
 	}
 
 	if p == nil || j > i {
-		return false
+		return errors.New("Not found")
 	}
 	*e = (*p).data
 
-	return true
+	return nil
 }
 
 func (l *LinkList) Locate(e ElemType) int64 {

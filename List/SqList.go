@@ -1,6 +1,9 @@
 package List
 
-import "fmt"
+import (
+	"errors"
+	"fmt"
+)
 
 const MAXSIZE = 100
 
@@ -46,13 +49,13 @@ func (sq *SqList) LocateElem(e ElemType) int64 {
 	return 0
 }
 
-func (sq *SqList) InsertElem(i int64, e ElemType) bool {
+func (sq *SqList) InsertElem(i int64, e ElemType) error {
 	if i < 1 || i > (*sq).length+1 {
-		return false
+		return errors.New("Index out of range")
 	}
 
 	if (*sq).length == MAXSIZE {
-		return false
+		return errors.New("Index out of Cap")
 	}
 
 	for j := (*sq).length - 1; j >= i-1; j-- {
@@ -62,12 +65,12 @@ func (sq *SqList) InsertElem(i int64, e ElemType) bool {
 	(*sq).data[i-1] = e
 	(*sq).length += 1
 
-	return true
+	return nil
 }
 
-func (sq *SqList) RemoveElem(i int64, e *ElemType) bool {
+func (sq *SqList) RemoveElem(i int64, e *ElemType) error {
 	if i < 1 || i > (*sq).length {
-		return false
+		return errors.New("Index out of range")
 	}
 
 	*e = (*sq).data[i-1]
@@ -78,5 +81,5 @@ func (sq *SqList) RemoveElem(i int64, e *ElemType) bool {
 
 	(*sq).length -= 1
 
-	return true
+	return nil
 }
