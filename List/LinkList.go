@@ -41,7 +41,7 @@ func (l *LinkList) Length() int64 {
 
 func (l *LinkList) Clear() error {
 
-	if l == nil {
+	if (*l).IsEmpty() {
 		return errors.New("list is nil")
 	}
 
