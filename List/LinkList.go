@@ -12,17 +12,17 @@ type LNode struct {
 
 type LinkList struct {
 	length int64
-	next   *LNode
+	hNode  *LNode
 }
 
 func InitLinkList() *LinkList {
-	return &LinkList{}
+	return &LinkList{0, &LNode{}}
 }
 
 func PrintLinkList(l *LinkList) {
 	fmt.Println("=============================>>>")
 
-	p := (*l).next
+	p := (*l).hNode.next
 	for p != nil {
 		fmt.Printf("%d\t", (*p).data)
 		p = (*p).next
@@ -32,7 +32,7 @@ func PrintLinkList(l *LinkList) {
 }
 
 func (l *LinkList) IsEmpty() bool {
-	return (*l).next == nil
+	return l == nil || (*l).hNode.next == nil
 }
 
 func (l *LinkList) Length() int64 {
@@ -45,15 +45,15 @@ func (l *LinkList) Clear() error {
 		return errors.New("list is nil")
 	}
 
-	p := (*l).next
-	var q *LNode
+	p := (*l).hNode.next
+	var node *LNode
 	for p != nil {
-		q = (*p).next
-		p = q
+		node = (*p).next
+		p = node
 		(*l).length -= 1
 	}
 
-	(*l).next = nil
+	(*l).hNode.next = nil
 	(*l).length = 0
 
 	return nil
@@ -73,61 +73,56 @@ func (l *LinkList) Destory() error {
 
 func (l *LinkList) Insert(i int64, e ElemType) error {
 
-	if i < 1 || i > l.length+1 {
-		return errors.New("index out of range")
-	}
+	var j int64 = 0
 
-	var j int64 = 1
-	p := (*l).next
+	p := (*l).hNode
+
 	for p != nil && j < i-1 {
 		p = (*p).next
-		j++
+		j += 1
+	}
+
+	if p == nil || j > i-1 {
+		return errors.New("Insert is failure")
 	}
 
 	node := &LNode{
 		data: e,
-		next: nil,
+		next: (*p).next,
 	}
 
-	if i == 1 {
-		(*node).next = (*l).next
-		(*l).next = node
-	} else {
-		(*node).next = (*p).next
-		(*p).next = node
-	}
+	(*p).next = node
 	(*l).length += 1
+
 	return nil
 }
 
 func (l *LinkList) Delete(i int64, e *ElemType) error {
-	if i < 1 || i > l.length {
-		return errors.New("index out of range")
+	var j int64 = 0
+
+	p := (*l).hNode
+
+	for p != nil && j < i-1 {
+		p = (*p).next
+		j += 1
 	}
 
-	if i == 1 {
-		*e = (*l).next.data
-		(*l).next = (*l).next.next
-	} else {
-		var j int64 = 1
-		p := (*l).next
-		for p != nil && j < i-1 {
-			p = (*p).next
-			j++
-		}
-
-		*e = (*p).next.data
-		(*p).next = (*p).next.next
+	if p == nil || j > i-1 {
+		return errors.New("Delete is failure")
 	}
 
+	node := (*p).next
+	*e = (*node).data
+	(*p).next = (*node).next
 	(*l).length -= 1
+
 	return nil
 
 }
 
 func (l *LinkList) GetElem(i int64, e *ElemType) error {
 	var j int64 = 1
-	p := (*l).next
+	p := (*l).hNode.next
 
 	for p != nil && j < i {
 		p = (*p).next
@@ -144,7 +139,7 @@ func (l *LinkList) GetElem(i int64, e *ElemType) error {
 
 func (l *LinkList) Locate(e ElemType) int64 {
 	var j int64 = 1
-	p := (*l).next
+	p := (*l).hNode.next
 
 	for p != nil && (*p).data != e {
 		p = (*p).next
