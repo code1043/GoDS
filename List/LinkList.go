@@ -15,7 +15,7 @@ type LinkList struct {
 	hNode  *LNode
 }
 
-func InitLinkList() *LinkList {
+func NewLinkList() *LinkList {
 	return &LinkList{0, &LNode{}}
 }
 
@@ -107,13 +107,12 @@ func (l *LinkList) Delete(i int64, e *ElemType) error {
 		j += 1
 	}
 
-	if p == nil || j > i-1 {
+	if (*p).next == nil || j > i-1 {
 		return errors.New("Delete is failure")
 	}
 
-	node := (*p).next
-	*e = (*node).data
-	(*p).next = (*node).next
+	*e = (*p).next.data
+	(*p).next = (*p).next.next
 	(*l).length -= 1
 
 	return nil

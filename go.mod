@@ -1,3 +1,3 @@
-module DS_Go
+module GoDS
 
 go 1.22

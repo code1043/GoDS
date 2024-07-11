@@ -9,7 +9,7 @@ func TestLinkList(t *testing.T) {
 
 	var e ElemType = 0
 
-	LL := InitLinkList()
+	LL := NewLinkList()
 	fmt.Println("是否为空:", LL.IsEmpty())
 
 	//插入
